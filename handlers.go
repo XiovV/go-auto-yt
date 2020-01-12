@@ -49,7 +49,8 @@ func HandleAddTarget(w http.ResponseWriter, r *http.Request) {
 		ReturnResponse(w, errRes)
 		return
 	}
-	target := DownloadTarget{URL: targetData.URL, Type: targetData.Type}
+	log.Info(targetData)
+	target := DownloadTarget{URL: targetData.URL, Type: targetData.Type, CustomCommand: targetData.CustomCommand}
 
 	doesTargetExist, err := target.DoesExist()
 	if err != nil {
@@ -73,12 +74,12 @@ func HandleAddTarget(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if targetData.DownloadMode == "Audio Only" {
-			target = DownloadTarget{URL: targetData.URL, DownloadMode: targetData.DownloadMode, Name: targetMetadata.Playlist, PreferredExtensionForAudio: targetData.FileExtension, DownloadHistory: []string{}, LastChecked: time.Now().Format("01-02-2006 15:04:05"), CheckingInterval: "", Type: targetData.Type, DownloadPath: targetData.DownloadPath}
+			target = DownloadTarget{URL: targetData.URL, DownloadMode: targetData.DownloadMode, Name: targetMetadata.Playlist, PreferredExtensionForAudio: targetData.FileExtension, DownloadHistory: []string{}, LastChecked: time.Now().Format("01-02-2006 15:04:05"), CheckingInterval: "", Type: targetData.Type, DownloadPath: targetData.DownloadPath, CustomCommand: targetData.CustomCommand}
 		} else if targetData.DownloadMode == "Video And Audio" {
-			target = DownloadTarget{URL: targetData.URL, DownloadMode: targetData.DownloadMode, Name: targetMetadata.Playlist, PreferredExtensionForVideo: targetData.FileExtension, DownloadHistory: []string{}, LastChecked: time.Now().Format("01-02-2006 15:04:05"), CheckingInterval: "", Type: targetData.Type, DownloadPath: targetData.DownloadPath}
+			target = DownloadTarget{URL: targetData.URL, DownloadMode: targetData.DownloadMode, Name: targetMetadata.Playlist, PreferredExtensionForVideo: targetData.FileExtension, DownloadHistory: []string{}, LastChecked: time.Now().Format("01-02-2006 15:04:05"), CheckingInterval: "", Type: targetData.Type, DownloadPath: targetData.DownloadPath, CustomCommand: targetData.CustomCommand}
 		}
 
-		err = target.Download(targetData.DownloadQuality, targetData.FileExtension, targetData.DownloadEntire)
+		err = target.Download(targetData.DownloadQuality, targetData.FileExtension, targetData.DownloadEntire, targetData.IsCustom)
 		if err != nil {
 			errRes = Response{Type: "Error", Key: "ERROR_DOWNLOADING", Message: "There was an error downloading the target " + err.Error()}
 			ReturnResponse(w, errRes)
@@ -130,7 +131,7 @@ func HandleCheckTarget(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if newVideoFound == true {
-		err = target.Download("best", targetData.FileExtension, false)
+		err = target.Download("best", targetData.FileExtension, false, false)
 		if err != nil {
 			errRes = Response{Type: "Error", Key: "ERROR_CHECKING_PLAYLIST", Message: "There was an error while checking the channel: " + err.Error()}
 			ReturnResponse(w, errRes)
@@ -223,7 +224,7 @@ func HandleUpdateCheckingInterval(w http.ResponseWriter, r *http.Request) {
 	}
 	err = UpdateCheckingInterval(interval.Type, interval.CheckingInterval)
 	if err != nil {
-		errRes = Response{Type: "Error", Key: "ERROR_UPDATING_CHECKING_INTERVAL", Message: "There was an updating the checking interval: " + err.Error()}
+		errRes = Response{Type: "Error", Key: "ERROR_UPDATING_CHECKING_INTERVAL", Message: err.Error()}
 		ReturnResponse(w, errRes)
 		return
 	}

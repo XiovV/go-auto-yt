@@ -81,7 +81,7 @@ func checkAllTargets(targets []DownloadTarget, targetType string) (Response, err
 			} else if target.DownloadMode == "Video And Audio" {
 				preferredExtension = target.PreferredExtensionForVideo
 			}
-			go target.Download("best", preferredExtension, false)
+			go target.Download("best", preferredExtension, false, false)
 			target.UpdateLatestDownloaded(videoId)
 		} else {
 			log.Info("no new videos found for: ", item.URL)

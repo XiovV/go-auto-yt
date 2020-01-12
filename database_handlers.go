@@ -76,7 +76,7 @@ func UpdateCheckingInterval(file, interval string) error {
 		return fmt.Errorf("UpdateCheckingInterval: bad conf type")
 	}
 	if len(cf.contents) == 0 {
-		return fmt.Errorf("UpdateCheckingInterval: empty config list")
+		return fmt.Errorf("You must add at least one channel before updating the checking interval.")
 	}
 	cf.Lock()
 	cf.contents[0].CheckingInterval = interval

@@ -143,6 +143,7 @@ type DownloadTarget struct {
 	CheckingInterval           string
 	Type                       string
 	DownloadPath               string
+	CustomCommand              string
 }
 
 type GetTargetPayload struct {
@@ -168,6 +169,8 @@ type AddTargetPayload struct {
 	CheckingInterval string
 	DownloadPath     string
 	Type             string
+	IsCustom         bool
+	CustomCommand    string
 }
 
 type DownloadVideoPayload struct {
@@ -199,6 +202,7 @@ type YTDLCommand struct {
 	FileType     string
 	Output       string
 	Target       string
+	Custom       string
 }
 
 type Database struct {

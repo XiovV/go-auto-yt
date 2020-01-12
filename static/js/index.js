@@ -35,6 +35,8 @@ function addChannel() {
   let fileExtension = document.getElementById("file-extension").value;
   let downloadQuality = document.getElementById("download-quality").value;
   let downloadPath = document.getElementById("output-path-indicator").innerText;
+  let isCustom = document.getElementById("custom-ytdl-command").checked;
+  let customCommand = document.getElementById("download-path").value;
 
   console.log("DL PATH: ", downloadPath)
 
@@ -48,7 +50,11 @@ function addChannel() {
     downloadEntire,
     downloadPath,
     type,
+    isCustom,
+    customCommand,
   };
+
+  console.log(channelData)
 
   const options = {
     method: "POST",
@@ -270,9 +276,17 @@ function changeExtension() {
 function customYtdl(checkboxId) {
   document.getElementById("download-path").disabled = false;
   if (checkboxId === "custom-download-output") {
-    document.getElementById("download-path").placeholder = "default: /channels/"
+    document.getElementById("download-path").placeholder = "default: /channels/";
+    document.getElementById("download-mode").disabled = false;
+    document.getElementById("download-quality").disabled = false;
   } else if (checkboxId === "custom-ytdl-output") {
-    document.getElementById("download-path").placeholder = "default: /channels/%(uploader)s/audio/%(title)s.%(ext)s"
+    document.getElementById("download-path").placeholder = "default: /channels/%(uploader)s/audio/%(title)s.%(ext)s";
+    document.getElementById("download-mode").disabled = false;
+    document.getElementById("download-quality").disabled = false;
+  } else if(checkboxId === "custom-ytdl-command") {
+    document.getElementById("download-path").placeholder = "example: youtube-dl -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best'";
+    document.getElementById("download-mode").disabled = true;
+    document.getElementById("download-quality").disabled = true;
   }
 }
 
