@@ -140,7 +140,8 @@ type DownloadTarget struct {
 	PreferredExtensionForVideo string
 	DownloadHistory            []string
 	LastChecked                string
-	CheckingInterval           string
+	CheckingInterval           int
+	CheckingIntervalTime       string
 	Type                       string
 	DownloadPath               string
 	CustomCommand              string
@@ -155,8 +156,13 @@ type DeleteTargetPayload struct {
 	Type string
 }
 
+type GetCheckingIntervalPayload struct {
+	Type string
+}
+
 type CheckingIntervalPayload struct {
 	CheckingInterval string
+	Time             string
 	Type             string
 }
 
