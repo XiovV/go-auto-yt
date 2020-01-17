@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -74,10 +75,13 @@ func HandleAddTarget(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		if targetData.DownloadMode == "Audio Only" {
-			target = DownloadTarget{URL: targetData.URL, DownloadMode: targetData.DownloadMode, Name: targetMetadata.Playlist, PreferredExtensionForAudio: targetData.FileExtension, DownloadHistory: []string{}, LastChecked: time.Now().Format("01-02-2006 15:04:05"), CheckingInterval: "", Type: targetData.Type, DownloadPath: targetData.DownloadPath, CustomCommand: targetData.CustomCommand}
+		if targetData.IsCustom == true {
+			target = DownloadTarget{URL: targetData.URL, DownloadMode: targetData.DownloadMode, Name: targetMetadata.Playlist, PreferredExtensionForAudio: targetData.FileExtension, DownloadHistory: []string{}, LastChecked: time.Now().Format("01-02-2006 15:04:05"), Type: targetData.Type, DownloadPath: targetData.DownloadPath}
+			fmt.Println("TARGET: ", target)
+		} else if targetData.DownloadMode == "Audio Only" {
+			target = DownloadTarget{URL: targetData.URL, DownloadMode: targetData.DownloadMode, Name: targetMetadata.Playlist, PreferredExtensionForAudio: targetData.FileExtension, DownloadHistory: []string{}, LastChecked: time.Now().Format("01-02-2006 15:04:05"), Type: targetData.Type, DownloadPath: targetData.DownloadPath}
 		} else if targetData.DownloadMode == "Video And Audio" {
-			target = DownloadTarget{URL: targetData.URL, DownloadMode: targetData.DownloadMode, Name: targetMetadata.Playlist, PreferredExtensionForVideo: targetData.FileExtension, DownloadHistory: []string{}, LastChecked: time.Now().Format("01-02-2006 15:04:05"), CheckingInterval: "", Type: targetData.Type, DownloadPath: targetData.DownloadPath, CustomCommand: targetData.CustomCommand}
+			target = DownloadTarget{URL: targetData.URL, DownloadMode: targetData.DownloadMode, Name: targetMetadata.Playlist, PreferredExtensionForVideo: targetData.FileExtension, DownloadHistory: []string{}, LastChecked: time.Now().Format("01-02-2006 15:04:05"), Type: targetData.Type, DownloadPath: targetData.DownloadPath}
 		}
 
 		err = target.Download(targetData.DownloadQuality, targetData.FileExtension, targetData.DownloadEntire, targetData.IsCustom)

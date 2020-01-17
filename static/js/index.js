@@ -1,17 +1,21 @@
 let channels = [];
 
 function addChannel() {
+  let downloadPath;
   startSpinner("add-channel-spinner");
   let downloadEntire = document.querySelector('#download-entire-channel').checked;
   let URL = document.getElementById("channel-url").value;
   let downloadMode = document.getElementById("download-mode").value;
   let fileExtension = document.getElementById("file-extension").value;
   let downloadQuality = document.getElementById("download-quality").value;
-  let downloadPath = document.getElementById("output-path-indicator").innerText;
   let isCustom = document.getElementById("custom-ytdl-command").checked;
   let customCommand = document.getElementById("download-path").value;
 
-  console.log("DL PATH: ", downloadPath)
+  if (isCustom) {
+    downloadPath = customCommand;
+  } else {
+    downloadPath = document.getElementById("output-path-indicator").innerText;
+  }
 
   let type = "Channel";
 
